@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0b0d">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Navegador PK">
+    <meta name="format-detection" content="telephone=no">
+    <title>Navegador PK</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Fundo reserva: aparece se o vídeo não carregar -->
+    <div class="video-fallback" aria-hidden="true"></div>
+
+    <!-- Vídeo de Fundo -->
+    <video autoplay loop muted playsinline preload="auto" id="bg-video"
+           disablepictureinpicture disableremoteplayback aria-hidden="true">
+        <source src="Fundo.mp4" type="video/mp4">
+        <source src="fundo.mp4" type="video/mp4">
+        <source src="Fundo.webm" type="video/webm">
+    </video>
+
+    <div class="overlay" aria-hidden="true"></div>
+
+    <!-- Botão de tela cheia -->
+    <button type="button" class="fullscreen-btn" id="fullscreen-btn"
+            aria-label="Entrar em tela cheia" title="Tela cheia">
+        <i class="fa-solid fa-expand" id="fullscreen-icon"></i>
+    </button>
+
+    <main class="main-container">
+        <div class="main-inner">
+
+            <!-- Texto "Olá PK" -->
+            <h1 class="greeting-text">Olá <span>PK</span></h1>
+
+            <!-- Barra de Pesquisa -->
+            <div class="search-area">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input type="text" id="search-input" placeholder="Pesquisar no Google ou digitar um endereço..."
+                           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+                           enterkeyhint="go" aria-label="Pesquisar no Google ou digitar um endereço"
+                           aria-autocomplete="list" aria-controls="suggestions" aria-expanded="false">
+                </div>
+
+                <ul class="suggestions hidden" id="suggestions" role="listbox" aria-label="Sugestões"></ul>
+            </div>
+
+            <!-- Seta de Favoritos -->
+            <button type="button" class="toggle-favorites" id="toggle-favs"
+                    aria-label="Mostrar favoritos" aria-expanded="false" aria-controls="favorites-area">
+                <i class="fa-solid fa-chevron-down" id="arrow-icon"></i>
+            </button>
+
+            <!-- Área de Favoritos -->
+            <div class="favorites-container hidden" id="favorites-area">
+                <div class="favorites-grid" id="favorites-grid"></div>
+
+                <button type="button" class="add-fav-btn" id="open-modal-btn">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i> Adicionar Favorito
+                </button>
+
+                <p class="hint-text">Segure um favorito para removê-lo.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal para Adicionar Favorito -->
+    <div class="modal hidden" id="fav-modal">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fav-modal-title">
+            <h3 id="fav-modal-title">Novo Favorito</h3>
+
+            <div class="input-group">
+                <label for="fav-url">URL do Site:</label>
+                <input type="text" id="fav-url" placeholder="https://exemplo.com"
+                       autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url" enterkeyhint="next">
+            </div>
+
+            <div class="input-group">
+                <label for="fav-name">Nome (Opcional):</label>
+                <input type="text" id="fav-name" placeholder="Ex: YouTube" autocomplete="off" enterkeyhint="done">
+            </div>
+
+            <div class="input-group">
+                <label>Ícone Personalizado (Opcional):</label>
+                <button type="button" id="upload-btn" class="upload-btn">
+                    <i class="fa-solid fa-image" aria-hidden="true"></i> Escolher da Galeria
+                </button>
+                <input type="file" id="fav-file" accept="image/*" class="visually-hidden">
+                <div id="preview-container" class="preview-container hidden">
+                    <img id="preview-img" alt="Prévia do ícone escolhido">
+                    <button type="button" id="remove-preview" class="remove-preview" aria-label="Remover ícone escolhido">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <small>Se vazio, o ícone do site será buscado automaticamente.</small>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" id="cancel-fav" class="btn-cancel">Cancelar</button>
+                <button type="button" id="save-fav" class="btn-save">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Remover Favorito -->
+    <div class="modal hidden" id="remove-modal">
+        <div class="modal-content compact" role="dialog" aria-modal="true" aria-labelledby="remove-modal-title">
+            <h3 id="remove-modal-title">Remover favorito?</h3>
+            <p class="modal-text" id="remove-modal-name"></p>
+            <div class="modal-buttons">
+                <button type="button" id="remove-cancel" class="btn-cancel">Cancelar</button>
+                <button type="button" id="remove-confirm" class="btn-danger">Remover</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
