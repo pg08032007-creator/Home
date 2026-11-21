@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Área Inicial</title>
+    <style>
+        /* --- Configurações Gerais --- */
+        :root {
+            --destaque: #ff3b3b;
+            --texto: #ffffff;
+            --texto-secundario: #aaaaaa;
+            --fundo-modal: #161616;
+            --borda: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-image: url('fundo.jpg');
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+            background-color: #000;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Container Principal */
+        .container-esquerda {
+            width: 45%;
+            height: 100%;
+            padding-left: 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.9);
+        }
+
+        /* --- Animação de Entrada (Staggered) --- */
+        .animar-entrada {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: surgir 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.6s; }
+        .delay-3 { animation-delay: 0.9s; }
+
+        @keyframes surgir {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Texto de Saudação (Efeito Máquina de Escrever) --- */
+        h1 {
+            color: var(--texto);
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            min-height: 1.2em; /* Evita "pulo" de layout */
+        }
+
+        h1 .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: var(--destaque);
+            margin-left: 5px;
+            vertical-align: text-bottom;
+            animation: piscar 0.8s step-end infinite;
+        }
+
+        h1 .destaque {
+            color: var(--destaque);
+            font-weight: bold;
+        }
+
+        @keyframes piscar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- Barra de Pesquisa --- */
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Efeito de brilho ao redor da barra */
+        .search-box::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 32px;
+            background: linear-gradient(90deg, var(--destaque), transparent, var(--destaque));
+            background-size: 200% 100%;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+            animation: brilhoMovel 3s linear infinite;
+        }
+
+        .search-box:focus-within::before {
+            opacity: 1;
+        }
+
+        @keyframes brilhoMovel {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 2px solid var(--borda);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--texto);
+            font-size: 1rem;
+            outline: none;
+            backdrop-filter: blur(8px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .search-box input:focus {
+            border-color: transparent;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px rgba(255, 59, 59, 0.2);
+            transform: scale(1.02);
+        }
+
+        .search-box input::placeholder {
+            color: var(--texto-secundario);
+            transition: color 0.3s;
+        }
+
+        .search-box input:focus::placeholder {
+            color: #555;
+        }
+
+        /* --- Área de Favoritos --- */
+        .favoritos-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+        }
+
+        .favoritos-titulo {
+            color: var(--texto-secundario);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .grid-favoritos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- Itens de Favoritos --- */
+        .site-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--texto);
+            position: relative;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: surgir 0.5s ease forwards;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .site-item:hover {
+            transform: translateY(-5px) scale(1.08);
+        }
+
+        .site-icone {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border: 2px solid var(--borda);
+            margin-bottom: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Efeito de brilho pulsante no hover */
+        .site-item:hover .site-icone {
+            border-color: var(--destaque);
+            box-shadow: 0 0 15px rgba(255, 59, 59, 0.4), inset 0 0 10px rgba(255, 59, 59, 0.2);
+            background: rgba(255, 59, 59, 0.1);
+        }
+
+        /* Tooltip do nome no hover (aparece embaixo) */
+        .site-nome {
+            font-size: 0.7rem;
+            text-align: center;
+            max-width: 65px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--texto-secundario);
+            transition: color 0.3s;
+        }
+
+        .site-item:hover .site-nome {
+            color: var(--texto);
+        }
+
+        .site-icone img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        /* --- Botão de Adicionar --- */
+        .add-btn {
+            background: none;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            color: var(--texto-secundario);
+            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            align-self: start;
+        }
+
+        .add-btn:hover {
+            border-color: var(--destaque);
+            color: var(--destaque);
+            background: rgba(255, 59, 59, 0.1);
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 59, 59, 0.3);
+        }
+
+        /* --- Modal --- */
+        .modal {
+            display: flex;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.ativo {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--fundo-modal);
+            padding: 35px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.ativo .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-content h2 {
+            color: var(--texto);
+            margin-bottom: 25px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 13px 16px;
+            margin-bottom: 15px;
+            background: #000;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            color: var(--texto);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .modal-content input:focus {
+            border-color: var(--destaque);
+            box-shadow: 0 0 10px rgba(255, 59, 59, 0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .modal-content button {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-salvar {
+            background: var(--destaque);
+            color: white;
+        }
+        .btn-salvar:hover {
+            background: #e02828;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+        }
+
+        .btn-cancelar {
+            background: #2a2a2a;
+            color: var(--texto);
+        }
+        .btn-cancelar:hover {
+            background: #3a3a3a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-esquerda">
+        <!-- Texto de Saudação com Efeito Máquina de Escrever -->
+        <h1 class="animar-entrada delay-1" id="saudacao">
+            <span class="cursor"></span>
+        </h1>
+
+        <!-- Barra de Pesquisa -->
+        <div class="search-box animar-entrada delay-2">
+            <input type="text" id="inputBusca" placeholder="Pesquise no Google ou digite uma URL...">
+        </div>
+
+        <!-- Seção de Favoritos -->
+        <div class="favoritos-container animar-entrada delay-3">
+            <span class="favoritos-titulo">Favoritos</span>
+            <div class="grid-favoritos" id="gridFavoritos"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modalAdd">
+        <div class="modal-content">
+            <h2>Adicionar Favorito</h2>
+            <input type="text" id="inputUrl" placeholder="Cole a URL (ex: google.com)">
+            <input type="text" id="inputNome" placeholder="Nome (opcional)">
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-salvar" onclick="salvarFavorito()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('gridFavoritos');
+        const modal = document.getElementById('modalAdd');
+        const inputBusca = document.getElementById('inputBusca');
+        const saudacao = document.getElementById('saudacao');
+
+        // --- Efeito Máquina de Escrever ---
+        function efeitoDigitacao() {
+            const texto1 = "Olá, ";
+            const texto2 = "PK";
+            let i = 0;
+            let fase = 1;
+            let html = "";
+            const cursor = '<span class="cursor"></span>';
+
+            const digitar = () => {
+                if (fase === 1) {
+                    if (i < texto1.length) {
+                        html += texto1.charAt(i);
+                        saudacao.innerHTML = html + cursor;
+                        i++;
+                        setTimeout(digitar, 90);
+                    } else {
+                        fase = 2;
+                        i = 0;
+                        // Pequena pausa antes de começar o "PK"
+                        setTimeout(digitar, 300);
+                    }
+                } else if (fase === 2) {
+                    if (i < texto2.length) {
+                        saudacao.innerHTML = html + `<span class="destaque">${texto2.substring(0, i + 1)}</span>` + cursor;
+                        i++;
+                        setTimeout(digitar, 140);
+                    } else {
+                        // Fim da digitação: cursor pisca para sempre
+                        saudacao.innerHTML = html + `<span class="destaque">${texto2}</span>` + cursor;
+                    }
+                }
+            };
+            // Começa após o pequeno delay da animação de entrada
+            setTimeout(digitar, 600);
+        }
+        efeitoDigitacao();
+
+        // --- Barra de Pesquisa (Enter) ---
+        inputBusca.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const valor = inputBusca.value.trim();
+                if (valor) {
+                    if (valor.includes('.') && !valor.includes(' ')) {
+                        window.location.href = 'https://' + valor;
+                    } else {
+                        window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(valor);
+                    }
+                }
+            }
+        });
+
+        // --- Modal ---
+        function abrirModal() {
+            document.getElementById('inputUrl').value = '';
+            document.getElementById('inputNome').value = '';
+            modal.classList.add('ativo');
+            setTimeout(() => document.getElementById('inputUrl').focus(), 300);
+        }
+
+        function fecharModal() {
+            modal.classList.remove('ativo');
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) fecharModal();
+        });
+
+        // Fecha com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('ativo')) {
+                fecharModal();
+            }
+        });
+
+        // --- Favoritos (LocalStorage) ---
+        function carregarFavoritos() {
+            const favoritos = JSON.parse(localStorage.getItem('meusFavoritos')) || [];
+            grid.innerHTML = '';
+
+            favoritos.forEach((site, index) => {
+                criarElementoFavorito(site, index);
+            });
+
+            // Botão de adicionar
+            const btnAdd = document.createElement('button');
+            btnAdd.className = 'add-btn';
+            btnAdd.innerText = '+';
+            btnAdd.title = 'Adicionar Favorito';
+            btnAdd.onclick = abrirModal;
+            grid.appendChild(btnAdd);
+        }
+
+        function criarElementoFavorito(site, index) {
+            const a = document.createElement('a');
+            a.href = site.url;
+            a.className = 'site-item';
+            a.title = site.nome;
+            
+            // Animação escalonada de entrada
+            a.style.animationDelay = `${index * 0.08}s`;
+
+            const dominio = new URL(site.url).hostname;
+            const faviconUrl = `https://www.google.com/s2/favicons?domain=${dominio}&sz=64`;
+
+            a.innerHTML = `
+                <div class="site-icone">
+                    <img src="${faviconUrl}" alt="${site.nome}" onerror="this.style.display='none'; this.parentElement.innerText='${site.nome.charAt(0).toUpperCase()}';">
+                </div>
+                <span class="site-nome">${site.nome}</span>
+            `;
+
+            a.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                if(confirm(`Remover ${site.nome}?`)) {
+                    removerFavorito(index);
+                }
+            });
+
+            grid.appendChild(a);
+        }
+
+        function salvarFavorito() {
+            let url = document.getElementById('inputUrl').value.trim();
+            let nome = document.getElementById('inputNome').value.trim();
+
+            if (!url) {
+                alert('Por favor, insira uma URL.');
+                return;
+            }
+
+            if (!url.startsWith('http')) {
+                url = 'https://' + url;
+            }
+
+            if (!nome) {
+                try {
+                    nome = new URL(url).hostname.replace('www.', '');
+                } catch {
+                    nome = 'Site';
+                }
+            }
+
+            const favoritos = JSON.parse(localStorage.getItem('meusFavoritos')) || [];
+            favoritos.push({ nome, url });
+            localStorage.setItem('meusFavoritos', JSON.stringify(favoritos));
+
+            fecharModal();
+            carregarFavoritos();
+        }
+
+        function removerFavorito(index) {
+            const favoritos = JSON.parse(localStorage.getItem('meusFavoritos')) || [];
+            favoritos.splice(index, 1);
+            localStorage.setItem('meusFavoritos', JSON.stringify(favoritos));
+            carregarFavoritos();
+        }
+
+        carregarFavoritos();
+    </script>
+</body>
+</html>
